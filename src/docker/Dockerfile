@@ -1,6 +1,6 @@
 FROM docker.io/centos:7
 
-ENV VERSION v1.6.1
+ENV VERSION v1.6.3
 
 WORKDIR /opt/archery
 
@@ -69,7 +69,7 @@ RUN yum -y install http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclie
 #archery
 RUN cd /opt \
     && yum -y install openldap-devel gettext nginx \
-    && git clone https://github.com/linqining/Archery.git && cd Archery && git checkout master \
+    && git clone https://github.com/linqining/Archery.git && cd Archery && git checkout $VERSION \
     && source /opt/venv4archery/bin/activate \
     && pip3 install -r /opt/archery/requirements.txt -i https://mirrors.ustc.edu.cn/pypi/web/simple/ \
     && cp /opt/archery/src/docker/nginx.conf /etc/nginx/ \
