@@ -85,4 +85,4 @@ ENV LC_ALL zh_CN.utf8
 EXPOSE 9123
 
 #start service
-ENTRYPOINT bash /opt/archery/src/docker/startup.sh && bash
+ENTRYPOINT bash /opt/Archery/src/docker/startup.sh && bash

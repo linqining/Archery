@@ -52,15 +52,15 @@ services:
       - "./inception/config.toml:/etc/config.toml"
 
   archery:
-    image: linqining/archery
+    image: linqining/archery:v1.0
     container_name: archery
     restart: always
     ports:
       - "9123:9123"
     volumes:
-      - "./archery/settings.py:/opt/archery/archery/settings.py"
+      - "./archery/settings.py:/opt/Archery/archery/settings.py"
       - "./archery/soar.yaml:/etc/soar.yaml"
-      - "./archery/downloads:/opt/archery/downloads"
-    command: ["bash","/opt/archery/src/docker/startup.sh"]
+      - "./archery/downloads:/opt/Archery/downloads"
+    command: ["bash","/opt/Archery/src/docker/startup.sh"]
     environment:
       NGINX_PORT: 9123
