@@ -216,7 +216,7 @@ class OracleEngine(EngineBase):
             # 禁用语句
             if re.match(r"^select", statement.lower()):
                 check_result.is_critical = True
-                result = ReviewResult(id=line, errlevel=2,
+                result = ReviewResult(id=line, errlevel=0,
                                       stagestatus='驳回不支持语句',
                                       errormessage='仅支持DML和DDL语句，查询语句请使用SQL查询功能！',
                                       sql=statement)

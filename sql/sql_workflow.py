@@ -90,25 +90,25 @@ def check(request):
     db_name = request.POST.get('db_name')
 
     result = {'status': 0, 'msg': 'ok', 'data': {}}
-    # 服务器端参数验证
-    if sql_content is None or instance_name is None or db_name is None:
-        result['status'] = 1
-        result['msg'] = '页面提交参数可能为空'
-        return HttpResponse(json.dumps(result), content_type='application/json')
+    # # 服务器端参数验证
+    # if sql_content is None or instance_name is None or db_name is None:
+    #     result['status'] = 1
+    #     result['msg'] = '页面提交参数可能为空'
+    #     return HttpResponse(json.dumps(result), content_type='application/json')
+    #
+    # # 交给engine进行检测
+    # try:
+    #     check_engine = get_engine(instance=instance)
+    #     check_result = check_engine.execute_check(db_name=db_name, sql=sql_content.strip())
+    # except Exception as e:
+    #     result['status'] = 1
+    #     result['msg'] = str(e)
+    #     return HttpResponse(json.dumps(result), content_type='application/json')
 
-    # 交给engine进行检测
-    try:
-        check_engine = get_engine(instance=instance)
-        check_result = check_engine.execute_check(db_name=db_name, sql=sql_content.strip())
-    except Exception as e:
-        result['status'] = 1
-        result['msg'] = str(e)
-        return HttpResponse(json.dumps(result), content_type='application/json')
-
-   # 处理检测结果
-    result['data']['rows'] = check_result.to_dict()
-    result['data']['CheckWarningCount'] = check_result.warning_count
-    result['data']['CheckErrorCount'] = check_result.error_count
+   # # 处理检测结果
+   #  result['data']['rows'] = check_result.to_dict()
+   #  result['data']['CheckWarningCount'] = check_result.warning_count
+   #  result['data']['CheckErrorCount'] = check_result.error_count
     return HttpResponse(json.dumps(result), content_type='application/json')
 
 
