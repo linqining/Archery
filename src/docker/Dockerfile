@@ -69,13 +69,13 @@ RUN yum -y install http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclie
 #archery
 RUN cd /opt \
     && yum -y install openldap-devel gettext nginx \
-    && git clone https://github.com/linqining/Archery.git && cd archery \
+    && git clone https://github.com/linqining/Archery.git && cd Archery \
     && source /opt/venv4archery/bin/activate \
-    && pip3 install -r /opt/archery/requirements.txt -i https://mirrors.ustc.edu.cn/pypi/web/simple/ \
-    && cp /opt/archery/src/docker/nginx.conf /etc/nginx/ \
-    && mv /opt/sqladvisor /opt/archery/src/plugins/ \
-    && mv /opt/soar /opt/archery/src/plugins/ \
-    && mv /opt/tmp_binlog2sql /opt/archery/src/plugins/binlog2sql
+    && pip3 install -r /opt/Archery/requirements.txt -i https://mirrors.ustc.edu.cn/pypi/web/simple/ \
+    && cp /opt/Archery/src/docker/nginx.conf /etc/nginx/ \
+    && mv /opt/sqladvisor /opt/Archery/src/plugins/ \
+    && mv /opt/soar /opt/Archery/src/plugins/ \
+    && mv /opt/tmp_binlog2sql /opt/Archery/src/plugins/binlog2sql
 
 
 ENV LANG en_US.UTF-8
