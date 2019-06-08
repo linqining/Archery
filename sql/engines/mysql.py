@@ -151,64 +151,64 @@ class MysqlEngine(EngineBase):
         """上线单执行前的检查, 返回Review set"""
         config = SysConfig()
         check_result = ReviewSet(full_sql=sql)
-        # 禁用/高危语句检查
-        line = 1
-        critical_ddl_regex = config.get('critical_ddl_regex', '')
-        p = re.compile(critical_ddl_regex)
-        check_result.syntax_type = 2  # TODO 工单类型 0、其他 1、DDL，2、DML
-        for statement in sqlparse.split(sql):
-            statement = sqlparse.format(statement, strip_comments=True)
-            # 禁用语句
-            if re.match(r"^select", statement.lower()):
-                check_result.is_critical = True
-                result = ReviewResult(id=line, errlevel=0,
-                                      stagestatus='Select statements',
-                                      errormessage='None',
-                                      sql=statement)
-                check_result.rows += [result]
-                check_result.error_count += 1
-            # 高危语句
-            elif critical_ddl_regex and p.match(statement.strip().lower()):
-                check_result.is_critical = True
-                result = ReviewResult(id=line, errlevel=2,
-                                      stagestatus='驳回高危SQL',
-                                      errormessage='禁止提交匹配' + critical_ddl_regex + '条件的语句！',
-                                      sql=statement)
-            # 正常语句
-            else:
-                result = ReviewResult(id=line, errlevel=0,
-                                      stagestatus='Audit completed',
-                                      errormessage='None',
-                                      sql=statement,
-                                      affected_rows=0,
-                                      execute_time=0, )
-            # 判断工单类型
-            # 没有找出DDL语句的才继续执行此判断
-            if check_result.syntax_type == 2:
-                if get_syntax_type(statement) == 'DDL':
-                    check_result.syntax_type = 1
-            check_result.rows += [result]
-
-            # 遇到禁用和高危语句直接返回，提高效率
-            if check_result.is_critical:
-                check_result.error_count += 1
-                return check_result
-            line += 1
-        # 通过检测的再进行inception检查
-        if config.get('go_inception'):
-            try:
-                inception_engine = GoInceptionEngine()
-                check_result = inception_engine.execute_check(instance=self.instance, db_name=db_name, sql=sql)
-            except Exception as e:
-                logger.debug(f"Inception检测语句报错：错误信息{traceback.format_exc()}")
-                raise RuntimeError(f"Inception检测语句报错，请注意检查系统配置中Inception配置，错误信息：\n{e}")
-        else:
-            try:
-                inception_engine = InceptionEngine()
-                check_result = inception_engine.execute_check(instance=self.instance, db_name=db_name, sql=sql)
-            except Exception as e:
-                logger.debug(f"Inception检测语句报错：错误信息{traceback.format_exc()}")
-                raise RuntimeError(f"Inception检测语句报错，请注意检查系统配置中Inception配置，错误信息：\n{e}")
+        # # 禁用/高危语句检查
+        # line = 1
+        # critical_ddl_regex = config.get('critical_ddl_regex', '')
+        # p = re.compile(critical_ddl_regex)
+        # check_result.syntax_type = 2  # TODO 工单类型 0、其他 1、DDL，2、DML
+        # for statement in sqlparse.split(sql):
+        #     statement = sqlparse.format(statement, strip_comments=True)
+        #     # 禁用语句
+        #     if re.match(r"^select", statement.lower()):
+        #         check_result.is_critical = True
+        #         result = ReviewResult(id=line, errlevel=0,
+        #                               stagestatus='Select statements',
+        #                               errormessage='None',
+        #                               sql=statement)
+        #         check_result.rows += [result]
+        #         check_result.error_count += 1
+        #     # 高危语句
+        #     elif critical_ddl_regex and p.match(statement.strip().lower()):
+        #         check_result.is_critical = True
+        #         result = ReviewResult(id=line, errlevel=2,
+        #                               stagestatus='驳回高危SQL',
+        #                               errormessage='禁止提交匹配' + critical_ddl_regex + '条件的语句！',
+        #                               sql=statement)
+        #     # 正常语句
+        #     else:
+        #         result = ReviewResult(id=line, errlevel=0,
+        #                               stagestatus='Audit completed',
+        #                               errormessage='None',
+        #                               sql=statement,
+        #                               affected_rows=0,
+        #                               execute_time=0, )
+        #     # 判断工单类型
+        #     # 没有找出DDL语句的才继续执行此判断
+        #     if check_result.syntax_type == 2:
+        #         if get_syntax_type(statement) == 'DDL':
+        #             check_result.syntax_type = 1
+        #     check_result.rows += [result]
+        #
+        #     # 遇到禁用和高危语句直接返回，提高效率
+        #     if check_result.is_critical:
+        #         check_result.error_count += 1
+        #         return check_result
+        #     line += 1
+        # # 通过检测的再进行inception检查
+        # if config.get('go_inception'):
+        #     try:
+        #         inception_engine = GoInceptionEngine()
+        #         check_result = inception_engine.execute_check(instance=self.instance, db_name=db_name, sql=sql)
+        #     except Exception as e:
+        #         logger.debug(f"Inception检测语句报错：错误信息{traceback.format_exc()}")
+        #         raise RuntimeError(f"Inception检测语句报错，请注意检查系统配置中Inception配置，错误信息：\n{e}")
+        # else:
+        #     try:
+        #         inception_engine = InceptionEngine()
+        #         check_result = inception_engine.execute_check(instance=self.instance, db_name=db_name, sql=sql)
+        #     except Exception as e:
+        #         logger.debug(f"Inception检测语句报错：错误信息{traceback.format_exc()}")
+        #         raise RuntimeError(f"Inception检测语句报错，请注意检查系统配置中Inception配置，错误信息：\n{e}")
         return check_result
 
     def execute_workflow(self, workflow):

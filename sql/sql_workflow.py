@@ -105,7 +105,7 @@ def check(request):
         result['msg'] = str(e)
         return HttpResponse(json.dumps(result), content_type='application/json')
 
-    # 处理检测结果
+   # 处理检测结果
     result['data']['rows'] = check_result.to_dict()
     result['data']['CheckWarningCount'] = check_result.warning_count
     result['data']['CheckErrorCount'] = check_result.error_count
