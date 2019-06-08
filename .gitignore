@@ -9,3 +9,6 @@ archery/settings.py.dev
 archery/settings_dev.py
 sql/migrations/
 venv
+src/docker-compose/archery/downloads/log/
+src/docker-compose/mongo/
+src/docker-compose/mysql/datadir/

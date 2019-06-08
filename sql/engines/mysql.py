@@ -161,9 +161,9 @@ class MysqlEngine(EngineBase):
             # 禁用语句
             if re.match(r"^select", statement.lower()):
                 check_result.is_critical = True
-                result = ReviewResult(id=line, errlevel=2,
-                                      stagestatus='驳回不支持语句',
-                                      errormessage='仅支持DML和DDL语句，查询语句请使用SQL查询功能！',
+                result = ReviewResult(id=line, errlevel=0,
+                                      stagestatus='Select statements',
+                                      errormessage='None',
                                       sql=statement)
                 check_result.rows += [result]
                 check_result.error_count += 1
@@ -194,7 +194,6 @@ class MysqlEngine(EngineBase):
                 check_result.error_count += 1
                 return check_result
             line += 1
-
         # 通过检测的再进行inception检查
         if config.get('go_inception'):
             try:
