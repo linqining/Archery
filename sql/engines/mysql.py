@@ -161,10 +161,10 @@ class MysqlEngine(EngineBase):
             # 禁用语句
             if re.match(r"^select", statement.lower()):
                 check_result.is_critical = True
-                # result = ReviewResult(id=line, errlevel=0,
-                #                       stagestatus='Select statements',
-                #                       errormessage='None',
-                #                       sql=statement)
+                result = ReviewResult(id=line, errlevel=0,
+                                      stagestatus='Select statements',
+                                      errormessage='None',
+                                      sql=statement)
                 check_result.rows += [result]
                 check_result.error_count += 1
             # 高危语句
