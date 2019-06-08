@@ -160,13 +160,13 @@ class MysqlEngine(EngineBase):
             statement = sqlparse.format(statement, strip_comments=True)
             # 禁用语句
             if re.match(r"^select", statement.lower()):
-                check_result.is_critical = True
+                check_result.is_critical = False
                 result = ReviewResult(id=line, errlevel=0,
                                       stagestatus='Select statements',
                                       errormessage='None',
                                       sql=statement)
                 check_result.rows += [result]
-                check_result.error_count += 1
+                # check_result.error_count += 1
             # 高危语句
             elif critical_ddl_regex and p.match(statement.strip().lower()):
                 check_result.is_critical = True

@@ -15,7 +15,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - "./mysql/my.cnf:/etc/mysql/my.cnf"
+      - "./mysql/my.cnf:/opt/archery/src/docker-compose/mysql/my.cnf"
       - "./mysql/datadir:/var/lib/mysql"
     environment:
       MYSQL_DATABASE: archery
