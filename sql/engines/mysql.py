@@ -120,7 +120,7 @@ class MysqlEngine(EngineBase):
         except IndexError:
             result['bad_query'] = True
             result['msg'] = '没有有效的SQL语句'
-        if re.match(r"^select|^show|^explain", sql, re.I) is None:
+        if re.match(r"^show|^explain", sql, re.I) is None:
             result['bad_query'] = True
             result['msg'] = '不支持的查询语法类型!'
         if '*' in sql:
@@ -214,7 +214,7 @@ class MysqlEngine(EngineBase):
     def execute_workflow(self, workflow):
         """执行上线单，返回Review set"""
         # 原生执行
-        if workflow.is_manual == 1:
+        if workflow.is_manual == 1 or re.match(r"^select", workflow.sqlworkflowcontent.sql_content.lower()):
             return self.execute(db_name=workflow.db_name, sql=workflow.sqlworkflowcontent.sql_content)
         # inception执行
         elif SysConfig().get('go_inception'):

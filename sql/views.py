@@ -119,21 +119,21 @@ def detail(request, workflow_id):
 
     review_result = ReviewSet()
     if rows:
-        try:
-            # 检验rows能不能正常解析
-            loaded_rows = json.loads(rows)
-            #  兼容旧数据'[[]]'格式，转换为新格式[{}]
-            if isinstance(loaded_rows[-1], list):
-                for r in loaded_rows:
-                    review_result.rows += [ReviewResult(inception_result=r)]
-                rows = review_result.json()
-        except json.decoder.JSONDecodeError:
-            review_result.rows += [ReviewResult(
-                # 迫于无法单元测试这里加上英文报错信息
-                errormessage="Json decode failed."
-                             "执行结果Json解析失败, 请联系管理员"
-            )]
-            rows = review_result.json()
+        # try:
+        #     # 检验rows能不能正常解析
+        #     loaded_rows = json.loads(rows)
+        #     #  兼容旧数据'[[]]'格式，转换为新格式[{}]
+        #     if isinstance(loaded_rows[-1], list):
+        #         for r in loaded_rows:
+        #             review_result.rows += [ReviewResult(inception_result=r)]
+        #         rows = review_result.json()
+        # except json.decoder.JSONDecodeError:
+        #     review_result.rows += [ReviewResult(
+        #         # 迫于无法单元测试这里加上英文报错信息
+        #         errormessage="Json decode failed."
+        #                      "执行结果Json解析失败, 请联系管理员"
+        #     )]
+        rows = review_result.json()
     else:
         rows = workflow_detail.sqlworkflowcontent.review_content
 
