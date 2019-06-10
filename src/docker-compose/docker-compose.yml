@@ -52,7 +52,7 @@ services:
       - "./inception/config.toml:/etc/config.toml"
 
   archery:
-    image: linqining/archery:local
+    image: linqining/archery
     container_name: archery
     restart: always
     ports:
