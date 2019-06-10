@@ -3,6 +3,8 @@ import traceback
 
 import simplejson as json
 
+import re
+
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render, get_object_or_404
@@ -137,10 +139,20 @@ def detail(request, workflow_id):
     else:
         rows = workflow_detail.sqlworkflowcontent.review_content
 
+    if re.match(r"^select", workflow_detail.sqlworkflowcontent.sql_content.lower()):
+        query_engine = get_engine(instance=workflow_detail.instance)
+        select_result = query_engine.query(db_name=workflow_detail.db_name, sql=workflow_detail.sqlworkflowcontent.sql_content, limit_num=1000)
+        column_list = select_result.column_list
+        select_rows = select_result.rows
+    else:
+        column_list = []
+        select_rows = []
+
+
     context = {'workflow_detail': workflow_detail, 'rows': rows, 'last_operation_info': last_operation_info,
                'is_can_review': is_can_review, 'is_can_execute': is_can_execute, 'is_can_timingtask': is_can_timingtask,
                'is_can_cancel': is_can_cancel, 'audit_auth_group': audit_auth_group, 'manual': manual,
-               'current_audit_auth_group': current_audit_auth_group, 'run_date': run_date}
+               'current_audit_auth_group': current_audit_auth_group, 'run_date': run_date, 'column_list': column_list, 'select_rows': select_rows}
     return render(request, 'detail.html', context)
 
 

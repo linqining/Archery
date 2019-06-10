@@ -166,6 +166,7 @@ class MysqlEngine(EngineBase):
                                       errormessage='None',
                                       sql=statement)
                 check_result.rows += [result]
+                check_result.syntax_type = 0
                 # check_result.error_count += 1
             # 高危语句
             elif critical_ddl_regex and p.match(statement.strip().lower()):
@@ -217,9 +218,10 @@ class MysqlEngine(EngineBase):
         if re.match(r"^select", workflow.sqlworkflowcontent.sql_content.lower()):
             query_engine = MysqlEngine(instance=workflow.instance)
             execute_result = ReviewSet(full_sql=workflow.sqlworkflowcontent.sql_content)
-            result_set = query_engine.query(db_name=workflow.db_name, sql=workflow.sqlworkflowcontent.sql_content, limit_num=1000)
-            for r in result_set.rows:
-                execute_result.rows += [ReviewResult()]
+            select_result = query_engine.query(db_name=workflow.db_name, sql=workflow.sqlworkflowcontent.sql_content, limit_num=1000)
+            inspection_result = [0, '', 0, '', select_result.error, select_result.full_sql, select_result.affected_rows, '', '', '', '']
+            logger.error(select_result.rows)
+            execute_result.rows += [ReviewResult(inception_result=inspection_result)]
             return execute_result
         # inception执行
         elif SysConfig().get('go_inception'):
