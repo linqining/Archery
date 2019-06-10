@@ -1,6 +1,6 @@
 FROM docker.io/centos:7
 
-ENV VERSION v1.7.2
+ENV VERSION v1.7.3
 
 WORKDIR /opt/archery
 
@@ -75,7 +75,6 @@ RUN cd /opt \
     && cp /opt/archery/src/docker/nginx.conf /etc/nginx/ \
     && mv /opt/sqladvisor /opt/archery/src/plugins/ \
     && mv /opt/soar /opt/archery/src/plugins/ \
-    && cp /opt/archery/src/docker-compose/mysql/my.cnf /etc/mysql/my.cnf \
     && mv /opt/tmp_binlog2sql /opt/archery/src/plugins/binlog2sql
 
 
