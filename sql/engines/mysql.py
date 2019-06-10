@@ -214,8 +214,13 @@ class MysqlEngine(EngineBase):
     def execute_workflow(self, workflow):
         """执行上线单，返回Review set"""
         # 原生执行
-        if workflow.is_manual == 1 or re.match(r"^select", workflow.sqlworkflowcontent.sql_content.lower()):
-            return self.execute(db_name=workflow.db_name, sql=workflow.sqlworkflowcontent.sql_content)
+        if re.match(r"^select", workflow.sqlworkflowcontent.sql_content.lower()):
+            query_engine = MysqlEngine(instance=workflow.instance)
+            execute_result = ReviewSet(full_sql=workflow.sqlworkflowcontent.sql_content)
+            result_set = query_engine.query(db_name=workflow.db_name, sql=workflow.sqlworkflowcontent.sql_content, limit_num=1000)
+            for r in result_set.rows:
+                execute_result.rows += [ReviewResult()]
+            return execute_result
         # inception执行
         elif SysConfig().get('go_inception'):
             inception_engine = GoInceptionEngine()
